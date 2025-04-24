@@ -34,13 +34,13 @@ function AjouterCatgr({ onClose, fetchdata }) {
       const reponseData = await reponse.json();
       console.log('reponse', reponseData);
 
-      if (reponse.ok) { 
+      if (reponse.ok) {
         toast.success(reponseData?.msg || 'Catégorie ajoutée avec succès');
         onClose();
         fetchdata();
         Setcatgr({ NomCategorie: '', type: '' });
         navigate('/admin/categorie');
-      } else { 
+      } else {
         toast.error(reponseData?.msg || 'Erreur lors de l’ajout');
       }
     } catch (error) {
@@ -50,7 +50,7 @@ function AjouterCatgr({ onClose, fetchdata }) {
   };
 
   return (
-    <div className="fixed min-h-screen  flex flex-col justify-center md:absolute sm:py-12">
+    <div className="fixed min-h-screen flex flex-col justify-center md:absolute sm:py-12">
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
         <div className="relative font-serif px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
@@ -72,7 +72,6 @@ function AjouterCatgr({ onClose, fetchdata }) {
                     value={categorie?.NomCategorie}
                     placeholder="NomCategorie"
                     onChange={handleChange}
-                    required
                     className="p-2 bg-slate-100 border rounded"
                   />
                   <label htmlFor="type">Type</label>
