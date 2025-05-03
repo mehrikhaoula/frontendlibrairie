@@ -4,8 +4,11 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { loginAdmin } from '../../redux/slices/adminSlice';
 
 function Login() {
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [data, setData] = useState({
     email: '',
@@ -33,6 +36,15 @@ function Login() {
     });
     const response = await dataResponse.json();
     if (response.success) {
+      const adminData = response.data.admin;
+      dispatch(
+        loginAdmin({
+          id: adminData.id,
+          name: adminData.name,
+          email: adminData.email,
+          token: response.data.token,
+        })
+      );
       toast.success(response.message);
       setTimeout(() => navigate('/admin/categorie'), 700);
     } else {
