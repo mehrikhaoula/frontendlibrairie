@@ -2,30 +2,29 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AjouterCatgr from "../../components/categorie/AjouterCatgr";
-import DeleteCatgr from "../../components/categorie/DeleteCatgr";
-import EditCatgr from "../../components/categorie/EditCatgr";
-import CatgrTable from "../../components/categorie/CatgrTable";
 import AdminPanel from "../../containers/AdminPanel";
 import { endpoint } from "../../utils/config";
+import AjouterProduit from "../../components/produit/AjouterProduit";
+import ProduitTable from "../../components/produit/ProduitTable";
+import DeleteProduit from "../../components/produit/DeleteProduit";
+import EditProduit from "../../components/produit/EditProduit";
 
-function AllCatgr() {
-  const [categorie, setCategorie] = useState([]);
-  const [ajouterCategorie, setAjouterCatgr] = useState(false);
+function AllProduits() {
+  const [produit, setProduit] = useState([]);
+  const [ajouterProduit, setAjouterProduit] = useState(false);
   const [viewDelete, setViewDelete] = useState(false);
-  const [categorieDeleted, setCategorieDeleted] = useState(null);
-  const [selectedCatgr, setSelectedCatgr] = useState(null);
+  const [produitDeleted, setProduitDeleted] = useState(null);
+  const [selectedProduit, setSelectedProduit] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-
-  // Récupérer toutes les catégories
+  const [categories, setCategories] = useState([]);
   const getAllCatgr = async () => {
     try {
       const response = await axios.get(endpoint.getAllCategorie, {
         withCredentials: true,
       });
-      console.log(response)
+      console.log(response);
       if (response.status === 201) {
-        setCategorie(response.data.data || []);
+        setCategories(response.data.data || []);
       } else {
         throw new Error(
           response.message || "Erreur lors de la récupération des catégories"
@@ -37,13 +36,28 @@ function AllCatgr() {
     }
   };
 
+  // Récupérer tous les produits
+  const getAllProduit = async () => {
+    try {
+      const response = await axios.get(endpoint.getAllProduit, {
+        withCredentials: true,
+      });
+      console.log(response.data.data);
+      setProduit(response.data.data);
+    } catch (error) {
+      console.error("Erreur dans getAllProduit:", error);
+      toast.error("Erreur lors de la récupération des produits");
+    }
+  };
+
   useEffect(() => {
     getAllCatgr();
+    getAllProduit();
   }, []);
 
   // Gérer la suppression
-  const handleDeleted = (categorie) => {
-    setCategorieDeleted(categorie);
+  const handleDeleted = (produit) => {
+    setProduitDeleted(produit);
     setViewDelete(true);
   };
 
@@ -51,14 +65,14 @@ function AllCatgr() {
     setViewDelete(false);
   };
 
-  const onDeleteCategorie = async (categorieId) => {
+  const onDeleteProduit = async (produitId) => {
     try {
-      const response = await axios.delete(endpoint.categorieById(categorieId), {
-        headers: { "Content-Type": "application/json" },
+      const response = await axios.delete(endpoint.produitById(produitId), {
         withCredentials: true,
+        headers: { "Content-Type": "application/json" },
       });
-      toast.success(response.data?.msg || "Catégorie supprimée avec succès");
-      getAllCatgr();
+      toast.success(response.data?.msg || "Produit supprimé avec succès");
+      getAllProduit(); // Refresh the product list
       setViewDelete(false);
     } catch (error) {
       toast.error(
@@ -68,8 +82,8 @@ function AllCatgr() {
   };
 
   // Gérer l'édition
-  const handleEditCatgr = (categorie) => {
-    setSelectedCatgr(categorie);
+  const handleEditProduit = (produit) => {
+    setSelectedProduit(produit);
     setIsEditing(true);
   };
 
@@ -77,22 +91,19 @@ function AllCatgr() {
     setIsEditing(false);
   };
 
-  const handleUpdateCatgr = async (updatedCatgr) => {
+  const handleUpdateProduit = async (updatedProduit) => {
     try {
       const response = await axios.put(
-        endpoint.categorieById(updatedCatgr._id),
+        endpoint.produitById(updatedProduit._id),
+        updatedProduit,
         {
-          NomCategorie: updatedCatgr.NomCategorie,
-          type: updatedCatgr.type,
-        },
-        {
-          headers: { "Content-Type": "application/json" },
           withCredentials: true,
+          headers: { "Content-Type": "application/json" },
         }
       );
-      toast.success(response.data?.msg || "Catégorie mise à jour avec succès");
-      getAllCatgr();
-      setIsEditing(false);
+      toast.success(response.data?.msg || "Produit mis à jour avec succès");
+      getAllProduit(); // Refresh the product list
+      setIsEditing(false); // Close the edit modal
     } catch (error) {
       toast.error(
         error.response?.data?.message || "Erreur lors de la mise à jour"
@@ -106,42 +117,46 @@ function AllCatgr() {
         <div className="w-full rounded-lg shadow-gray-500 shadow-lg overflow-hidden">
           <div className="bg-gradient-to-tr from-gray-4000 to-slate-400 py-2 px-4 flex justify-between items-center">
             <h2 className="text-3xl text-blue-950 font-extrabold text-center py-4 font-serif">
-              Liste des Catégories
+              Liste des Produits
             </h2>
             <button
               className="px-3 py-1 border-2 border-blue-950 text-blue-400 rounded-lg transition-colors duration-200 hover:bg-slate-600 hover:text-white"
-              onClick={() => setAjouterCatgr(true)}
+              onClick={() => setAjouterProduit(true)}
             >
-              Ajouter Nouvelle Catégorie
+              Ajouter Nouveau Produit
             </button>
           </div>
           <div className="md:block">
-            <CatgrTable
-              categorie={categorie}
+            <ProduitTable
+              produits={produit}
               onDelete={handleDeleted}
-              onEdit={handleEditCatgr}
+              onEdit={handleEditProduit}
             />
           </div>
         </div>
 
-        {ajouterCategorie && (
-          <AjouterCatgr
-            fetchdata={getAllCatgr}
-            onClose={() => setAjouterCatgr(false)}
+        {ajouterProduit && (
+          <AjouterProduit
+            fetchdata={getAllProduit}
+            onClose={() => setAjouterProduit(false)}
+            categories={categories}
           />
         )}
+
         {viewDelete && (
-          <DeleteCatgr
-            categorie={categorieDeleted}
+          <DeleteProduit
+            produit={produitDeleted}
             onCancel={handleCancelDeleted}
-            onDelete={onDeleteCategorie}
+            onDelete={onDeleteProduit}
           />
         )}
+
         {isEditing && (
           <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-            <EditCatgr
-              categorie={selectedCatgr}
-              onSave={handleUpdateCatgr}
+            <EditProduit
+              categories={categories}
+              produit={selectedProduit}
+              onSave={handleUpdateProduit}
               onCancel={handleCancel}
             />
           </div>
@@ -151,4 +166,4 @@ function AllCatgr() {
   );
 }
 
-export default AllCatgr;
+export default AllProduits;

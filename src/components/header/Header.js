@@ -30,7 +30,7 @@ function Header() {
   };
 
   return (
-    <header className="h-16 bg-gradient-to-r  from-pink-300 from-10%  to-blue-900 to-100%  text-white shadow-lg fixed w-full z-40 top-0 transition-all duration-300">
+    <header className="h-16 bg-gradient-to-r  from-slate-300 from-10%  to-blue-800 to-100%  text-white shadow-lg fixed w-full z-40 top-0 transition-all duration-300">
       <ToastContainer position="top-center" />
       <div className="h-full container mx-auto flex items-center px-4 justify-between">
         {/* Logo */}

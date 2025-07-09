@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
-import ImageLogo from '../../assets/images.png';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { loginAdmin } from '../../redux/slices/adminSlice';
+import React, { useState } from "react";
+import ImageLogo from "../../assets/images.png";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginAdmin } from "../../redux/slices/adminSlice";
+import axios from "axios";
+import { endpoint } from "../../utils/config";
 
 function Login() {
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [data, setData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
   const navigate = useNavigate();
 
@@ -25,32 +27,33 @@ function Login() {
   };
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    const dataResponse = await fetch(`${process.env.REACT_APP_API_URL}/login`, {
-      method: 'POST',
-      credentials: 'include',
+  e.preventDefault();
+  try {
+    const response = await axios.post(endpoint.login, data, {
+      withCredentials: true,
       headers: {
-        'content-type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
     });
-    const response = await dataResponse.json();
-    if (response.success) {
-      const adminData = response.data.admin;
+
+    if (response.status === 200) {
+      const adminData = response.data.data.admin;
       dispatch(
         loginAdmin({
           id: adminData.id,
           name: adminData.name,
           email: adminData.email,
-          token: response.data.token,
+          role: adminData.role,
         })
       );
-      toast.success(response.message);
-      setTimeout(() => navigate('/admin/categorie'), 700);
-    } else {
-      toast.error(response.message);
+      toast.success(response.data?.msg || "Connexion réussie");
+      setTimeout(() => navigate("/admin/categories"), 700);
     }
-  };
+  } catch (error) {
+    toast.error(error.response?.data?.msg || "Erreur de connexion");
+  }
+};
+
 
   return (
     <div className=" min-h-screen flex items-center justify-center bg-gradient-to-tr from-slate-400 to-blue-950 p-6">
@@ -58,7 +61,11 @@ function Login() {
       <div className="  bg-gray-200 p-8 rounded-3xl w-full max-w-md hover:shadow-2xl">
         {/* Logo */}
         <div className="w-32 h-32 mx-auto mb-6">
-          <img src={ImageLogo} alt="logo" className="w-full h-full object-contain" />
+          <img
+            src={ImageLogo}
+            alt="logo"
+            className="w-full h-full object-contain"
+          />
         </div>
 
         {/* Formulaire */}
@@ -83,7 +90,7 @@ function Login() {
             <label className="text-gray-700 font-medium">Mot de passe</label>
             <div className="relative flex items-center hover:scale-105">
               <input
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 name="password"
                 placeholder="Entrez votre mot de passe"
                 value={data.password}
@@ -98,9 +105,9 @@ function Login() {
               </div>
             </div>
           </div>
-          <div className='flex gap-1 items-center'>
-            <input type='checkbox'/>
-            <span className='text-sm'>Remember Password</span>
+          <div className="flex gap-1 items-center">
+            <input type="checkbox" />
+            <span className="text-sm">Remember Password</span>
           </div>
 
           {/* Bouton Login */}
@@ -111,19 +118,20 @@ function Login() {
             Se connecter
           </button>
         </form>
-        <p className='font-semibold mt-5'>Don't have an account?
-          <a href='#' className='text-blue-900 hover:underline'> Register </a>
+        <p className="font-semibold mt-5">
+          Don't have an account?
+          <a href="#" className="text-blue-900 hover:underline">
+            {" "}
+            Register{" "}
+          </a>
         </p>
         {/* Lien optionnel (exemple) */}
         <p className="text-center text-gray-500 mt-6 text-sm">
-          Mot de passe oublié ?{' '}
-          <p className="text-blue-500 hover:underline">
-            Réinitialiser
-          </p>
+          Mot de passe oublié ?{" "}
+          <p className="text-blue-500 hover:underline">Réinitialiser</p>
         </p>
       </div>
     </div>
-    
   );
 }
 

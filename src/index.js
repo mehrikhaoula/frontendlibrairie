@@ -1,18 +1,21 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import reportWebVitals from "./reportWebVitals";
+import { Provider } from "react-redux";
+import { store } from "./redux/Store";
+import App from "./App";
+import { ToastContainer } from "react-toastify";
 
-import reportWebVitals from './reportWebVitals';
-import {RouterProvider} from 'react-router-dom';
-import router from"./routes";
-import { store } from './redux/Store';
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <provider store={store}>
-    <RouterProvider router={router} />
-    </provider>
+    <Provider store={store}>
+      {/* <RouterProvider> */}
+        <ToastContainer />
+        <App />
+      {/* </RouterProvider> */}
+    </Provider>
   </React.StrictMode>
 );
 
