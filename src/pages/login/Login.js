@@ -36,8 +36,7 @@ function Login() {
         "Content-Type": "application/json",
       },
     });
-    console.log("LOGIN ADMIN RESPONSE:", response.data);
-
+  
     if (response.status === 200) {
       const adminData = response.data.data.admin;
       dispatch(
