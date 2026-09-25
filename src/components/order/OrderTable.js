@@ -12,8 +12,11 @@ const OrderTable = ({
   const [dateFilter, setDateFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
+  // Filtre du mois UNIQUEMENT pour le total des commandes livrées
+  const [deliveredMonth, setDeliveredMonth] = useState("");
+
   // =========================
-  // FILTRE + TRI
+  // FILTRE + TRI COMMANDES
   // =========================
   const filteredOrders = useMemo(() => {
     let result = [...(orders || [])];
@@ -57,8 +60,13 @@ const OrderTable = ({
 
     // Tri par date
     result.sort((a, b) => {
-      const dateA = new Date(a.createdAt || 0).getTime();
-      const dateB = new Date(b.createdAt || 0).getTime();
+      const dateA = new Date(
+        a.createdAt || 0
+      ).getTime();
+
+      const dateB = new Date(
+        b.createdAt || 0
+      ).getTime();
 
       if (sortOrder === "newest") {
         return dateB - dateA;
@@ -68,10 +76,55 @@ const OrderTable = ({
     });
 
     return result;
-  }, [orders, search, sortOrder, dateFilter, statusFilter]);
+  }, [
+    orders,
+    search,
+    sortOrder,
+    dateFilter,
+    statusFilter,
+  ]);
 
   // =========================
-  // RESET FILTRES
+  // TOTAL COMMANDES LIVRÉES
+  // =========================
+  const deliveredStats = useMemo(() => {
+    let deliveredOrders = (orders || []).filter(
+      (order) => order.status === "Livrée"
+    );
+
+    // Le filtre mois agit UNIQUEMENT ici
+    if (deliveredMonth) {
+      deliveredOrders = deliveredOrders.filter(
+        (order) => {
+          if (!order.createdAt) return false;
+
+          const date = new Date(order.createdAt);
+
+          const year = date.getFullYear();
+
+          const month = String(
+            date.getMonth() + 1
+          ).padStart(2, "0");
+
+          return `${year}-${month}` === deliveredMonth;
+        }
+      );
+    }
+
+    const total = deliveredOrders.reduce(
+      (sum, order) =>
+        sum + Number(order.total || 0),
+      0
+    );
+
+    return {
+      count: deliveredOrders.length,
+      total,
+    };
+  }, [orders, deliveredMonth]);
+
+  // =========================
+  // RESET FILTRES COMMANDES
   // =========================
   const resetFilters = () => {
     setSearch("");
@@ -84,7 +137,7 @@ const OrderTable = ({
     <div className="w-full">
 
       {/* =========================
-          FILTRES
+          FILTRES COMMANDES
       ========================= */}
       <div className="mb-6 rounded-2xl bg-white p-5 shadow-md border border-gray-200">
 
@@ -100,7 +153,9 @@ const OrderTable = ({
               type="text"
               placeholder="Nom ou prénom..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) =>
+                setSearch(e.target.value)
+              }
               className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
             />
           </div>
@@ -113,7 +168,9 @@ const OrderTable = ({
 
             <select
               value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
+              onChange={(e) =>
+                setSortOrder(e.target.value)
+              }
               className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
             >
               <option value="newest">
@@ -135,7 +192,9 @@ const OrderTable = ({
             <input
               type="date"
               value={dateFilter}
-              onChange={(e) => setDateFilter(e.target.value)}
+              onChange={(e) =>
+                setDateFilter(e.target.value)
+              }
               className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
             />
           </div>
@@ -148,15 +207,34 @@ const OrderTable = ({
 
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
+              onChange={(e) =>
+                setStatusFilter(e.target.value)
+              }
               className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
             >
-              <option value="all">Tous les statuts</option>
-              <option value="En attente">En attente</option>
-              <option value="Confirmée">Confirmée</option>
-              <option value="Expédiée">Expédiée</option>
-              <option value="Livrée">Livrée</option>
-              <option value="Annulée">Annulée</option>
+              <option value="all">
+                Tous les statuts
+              </option>
+
+              <option value="En attente">
+                En attente
+              </option>
+
+              <option value="Confirmée">
+                Confirmée
+              </option>
+
+              <option value="Expédiée">
+                Expédiée
+              </option>
+
+              <option value="Livrée">
+                Livrée
+              </option>
+
+              <option value="Annulée">
+                Annulée
+              </option>
             </select>
           </div>
 
@@ -173,7 +251,68 @@ const OrderTable = ({
         {/* Résultat */}
         <div className="mt-4 text-sm text-gray-500">
           {filteredOrders.length} commande
-          {filteredOrders.length !== 1 ? "s" : ""}
+          {filteredOrders.length !== 1
+            ? "s"
+            : ""}
+        </div>
+      </div>
+
+      {/* =========================
+          STATISTIQUES LIVRAISONS
+      ========================= */}
+      <div className="mb-6 rounded-2xl bg-gradient-to-r from-green-50 to-white p-5 shadow-md border border-green-100">
+
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+
+          {/* Informations */}
+          <div>
+            <p className="text-sm font-semibold text-green-700">
+              Commandes livrées
+            </p>
+
+            <p className="mt-1 text-2xl font-bold text-blue-950">
+              {deliveredStats.total.toFixed(2)} Dt
+            </p>
+
+            <p className="mt-1 text-sm text-gray-500">
+              {deliveredStats.count} commande
+              {deliveredStats.count !== 1
+                ? "s"
+                : ""}{" "}
+              livrée
+              {deliveredStats.count !== 1
+                ? "s"
+                : ""}
+            </p>
+          </div>
+
+          {/* Filtre mois indépendant */}
+          <div className="w-full md:w-64 mx-20">
+
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Voir le total par mois
+            </label>
+
+            <input
+              type="month"
+              value={deliveredMonth}
+              onChange={(e) =>
+                setDeliveredMonth(e.target.value)
+              }
+              className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm outline-none focus:border-green-600 focus:ring-2 focus:ring-green-100"
+            />
+
+            {deliveredMonth && (
+              <button
+                onClick={() => setDeliveredMonth("")}
+                className="mt-2 text-xs font-semibold text-gray-500 hover:text-gray-800"
+              >
+                Afficher tous les mois
+              </button>
+            )}
+
+          </div>
+
         </div>
       </div>
 
@@ -181,6 +320,7 @@ const OrderTable = ({
           TABLE
       ========================= */}
       <div className="w-full overflow-x-auto rounded-xl">
+
         <table className="min-w-full table-auto border-collapse">
 
           <thead>
@@ -259,13 +399,16 @@ const OrderTable = ({
 
                   {/* Adresse */}
                   <td className="px-6 py-4 text-sm text-gray-700 max-w-xs">
-                    {order.customer?.address || "Adresse inconnue"}
+                    {order.customer?.address ||
+                      "Adresse inconnue"}
                   </td>
 
                   {/* Date */}
                   <td className="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
                     {order.createdAt
-                      ? new Date(order.createdAt).toLocaleDateString(
+                      ? new Date(
+                          order.createdAt
+                        ).toLocaleDateString(
                           "fr-FR",
                           {
                             day: "2-digit",
@@ -278,23 +421,29 @@ const OrderTable = ({
 
                   {/* Statut */}
                   <td className="px-6 py-4 text-sm text-gray-700">
-                    {order.status || "En attente"}
+                    {order.status ||
+                      "En attente"}
                   </td>
 
                   {/* Paiement */}
                   <td className="px-6 py-4 text-sm text-gray-700">
                     <div>
-                      {order.paymentStatus || "—"}
+                      {order.paymentStatus ||
+                        "—"}
                     </div>
 
                     <div className="text-xs text-gray-500">
-                      {order.paymentMethod || "—"}
+                      {order.paymentMethod ||
+                        "—"}
                     </div>
                   </td>
 
                   {/* Total */}
                   <td className="px-6 py-4 text-sm font-bold text-blue-950 whitespace-nowrap">
-                    {Number(order.total || 0).toFixed(2)} Dt
+                    {Number(
+                      order.total || 0
+                    ).toFixed(2)}{" "}
+                    Dt
                   </td>
 
                   {/* Actions */}
@@ -302,15 +451,20 @@ const OrderTable = ({
 
                     <button
                       className="text-blue-700 hover:text-blue-950 hover:underline mr-4 transition-colors duration-150"
-                      onClick={() => onDetails(order)}
+                      onClick={() =>
+                        onDetails(order)
+                      }
                     >
                       détails
                     </button>
 
-                    {order.status === "En attente" && (
+                    {order.status ===
+                      "En attente" && (
                       <button
                         className="text-green-700 hover:text-green-900 hover:underline mr-4 transition-colors duration-150"
-                        onClick={() => onConfirm(order)}
+                        onClick={() =>
+                          onConfirm(order)
+                        }
                       >
                         confirmer
                       </button>
@@ -318,14 +472,18 @@ const OrderTable = ({
 
                     <button
                       className="text-indigo-600 hover:text-indigo-900 hover:underline mr-4 transition-colors duration-150"
-                      onClick={() => onEdit(order)}
+                      onClick={() =>
+                        onEdit(order)
+                      }
                     >
                       modifier
                     </button>
 
                     <button
                       className="text-red-700 hover:text-red-900 hover:underline"
-                      onClick={() => onDelete(order)}
+                      onClick={() =>
+                        onDelete(order)
+                      }
                     >
                       supprimer
                     </button>
@@ -352,6 +510,7 @@ const OrderTable = ({
           </tbody>
 
         </table>
+
       </div>
     </div>
   );

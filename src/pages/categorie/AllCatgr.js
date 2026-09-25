@@ -23,16 +23,9 @@ function AllCatgr() {
     const response = await axios.get(endpoint.getAllCategorie, {
       withCredentials: true,
     });
-
-    console.log("✅ CATEGORIES RESPONSE:", response);
-    console.log("📦 CATEGORIES DATA:", response.data);
-    console.log("📋 CATEGORIES ARRAY:", response.data?.data);
-    
     setCategorie(response.data?.data || []);
   } catch (error) {
-    console.error("❌ CATEGORIES ERROR:", error);
-    console.error("❌ STATUS:", error.response?.status);
-    console.error("❌ ERROR DATA:", error.response?.data);
+    toast.error("Erreur lors de la récupération des catégories");
   }
 };
 

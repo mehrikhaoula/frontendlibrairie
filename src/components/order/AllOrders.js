@@ -48,16 +48,11 @@ const AllOrders = () => {
     await fetchData();
 
   } catch (error) {
-    console.error(
-      "❌ Erreur confirmation commande :",
-      error
-    );
-
     alert(
-      error.response?.data?.message ||
+    error.response?.data?.message ||
       "Impossible de confirmer la commande."
-    );
-  }
+  );
+}
 };
 
   const handleUpdate = async (updatedOrder) => {

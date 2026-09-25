@@ -24,7 +24,6 @@ function Header() {
         setTimeout(() => navigate('/'), 700);
       }
     } catch (error) {
-      console.error('Erreur dans logOut :', error);
       toast.error('Erreur lors de la déconnexion');
     }
   };

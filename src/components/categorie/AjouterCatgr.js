@@ -22,7 +22,6 @@ function AjouterCatgr({ onClose, fetchdata }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Formulaire soumis");
 
     try {
       const reponse = await axios.post(endpoint.addCategorie, categorie, {
@@ -31,7 +30,6 @@ function AjouterCatgr({ onClose, fetchdata }) {
         },
         withCredentials: true,
       });
-      console.log("reponse", reponse);
 
       if (reponse.status === 201) {
         toast.success(reponse.data?.msg || "Catégorie ajoutée avec succès");
@@ -43,7 +41,6 @@ function AjouterCatgr({ onClose, fetchdata }) {
         toast.error(reponse.data?.msg || "Erreur lors de l’ajout");
       }
     } catch (error) {
-      console.error("Erreur réseau ou autre:", error);
       toast.error("Erreur inattendue, veuillez réessayer");
     }
   };

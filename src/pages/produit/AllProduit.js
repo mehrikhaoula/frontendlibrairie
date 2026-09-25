@@ -22,7 +22,7 @@ function AllProduits() {
       const response = await axios.get(endpoint.getAllCategorie, {
         withCredentials: true,
       });
-      console.log(response);
+      
       if (response.status === 201) {
         setCategories(response.data.data || []);
       } else {
@@ -31,7 +31,7 @@ function AllProduits() {
         );
       }
     } catch (error) {
-      console.error("Erreur dans getAllCatgr :", error);
+  
       toast.error("Erreur lors de la récupération des catégories");
     }
   };
@@ -42,10 +42,10 @@ function AllProduits() {
       const response = await axios.get(endpoint.getAllProduit, {
         withCredentials: true,
       });
-      console.log(response.data.data);
+      
       setProduit(response.data.data);
     } catch (error) {
-      console.error("Erreur dans getAllProduit:", error);
+     
       toast.error("Erreur lors de la récupération des produits");
     }
   };

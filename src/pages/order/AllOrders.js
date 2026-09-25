@@ -32,11 +32,7 @@ const AllOrders = () => {
 
       setOrders(res.data);
     } catch (error) {
-      console.error(
-        "❌ Erreur récupération commandes :",
-        error
-      );
-    }
+}
   };
 
   useEffect(() => {
@@ -62,11 +58,7 @@ const AllOrders = () => {
       await fetchData();
 
     } catch (error) {
-      console.error(
-        "❌ Erreur suppression commande :",
-        error
-      );
-    }
+}
   };
 
   // ==========================================
@@ -88,11 +80,6 @@ const AllOrders = () => {
       await fetchData();
 
     } catch (error) {
-      console.error(
-        "❌ Erreur confirmation commande :",
-        error
-      );
-
       alert(
         error.response?.data?.message ||
           "Impossible de confirmer la commande."
@@ -120,11 +107,7 @@ const AllOrders = () => {
       await fetchData();
 
     } catch (error) {
-      console.error(
-        "❌ Erreur modification commande :",
-        error
-      );
-    }
+}
   };
 
   // ==========================================
