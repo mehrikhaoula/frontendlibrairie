@@ -1,5 +1,4 @@
 const API_BASE_URL = "http://localhost:3010/api";
-const API_BASE_URL_BASE = "http://localhost:3010";
 
 export const endpoint = {
   login: `${API_BASE_URL}/login`,
@@ -14,7 +13,7 @@ export const endpoint = {
   addProduit: `${API_BASE_URL}/produit`,
   produitById: (id) => `${API_BASE_URL}/produit/${id}`,
   imageUploadProduit: `${API_BASE_URL}/files/upload-product`,
-  imageReadProduit: (imgUrl) =>  `${API_BASE_URL_BASE}${imgUrl}`,
+  imageReadProduit: (imgUrl) => imgUrl,
 
   // users
   getAllUsers: `${API_BASE_URL}/users`,
@@ -24,7 +23,8 @@ export const endpoint = {
   // orders
   getAllOrders: `${API_BASE_URL}/orders`,
   addOrder: `${API_BASE_URL}/order`,
-  orderById: (id) => `${API_BASE_URL}/order/${id}`,
-
+  orderById: (id) => `${API_BASE_URL}/orders/${id}`,
+  createOrder: `${API_BASE_URL}/orders`,
+myOrders: `${API_BASE_URL}/orders/my-orders`,
 
 };

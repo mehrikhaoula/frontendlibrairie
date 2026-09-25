@@ -12,7 +12,7 @@ function AjouterProduit({ onClose, fetchdata, categories }) {
     price: 0,
     description: "",
     discount: 0,
-    quantite: 0,
+    quantite: 200,
     imageUrl: "",
   });
 
@@ -90,7 +90,7 @@ function AjouterProduit({ onClose, fetchdata, categories }) {
         price: 0,
         description: "",
         discount: 0,
-        quantite: 0,
+        quantite: 200,
       });
       setImageFile(null);
     } catch (error) {

@@ -11,7 +11,7 @@ function DeleteOrder({ order, onDelete, onCancel }) {
           Êtes-vous sûr de vouloir supprimer la commande{" "}
           <strong>{order._id}</strong> effectuée par l'utilisateur{" "}
           <strong>{order.userId?.name || order.userId || "Inconnu"}</strong> d’un montant total de{" "}
-          <strong>{order.total} €</strong> ?
+          <strong>{order.total} Dt</strong> ?
         </p>
         <div className="flex justify-end mt-6 gap-3">
           <button

@@ -19,23 +19,22 @@ function AllCatgr() {
 
   // Récupérer toutes les catégories
   const getAllCatgr = async () => {
-    try {
-      const response = await axios.get(endpoint.getAllCategorie, {
-        withCredentials: true,
-      });
-      console.log(response)
-      if (response.status === 201) {
-        setCategorie(response.data.data || []);
-      } else {
-        throw new Error(
-          response.message || "Erreur lors de la récupération des catégories"
-        );
-      }
-    } catch (error) {
-      console.error("Erreur dans getAllCatgr :", error);
-      toast.error("Erreur lors de la récupération des catégories");
-    }
-  };
+  try {
+    const response = await axios.get(endpoint.getAllCategorie, {
+      withCredentials: true,
+    });
+
+    console.log("✅ CATEGORIES RESPONSE:", response);
+    console.log("📦 CATEGORIES DATA:", response.data);
+    console.log("📋 CATEGORIES ARRAY:", response.data?.data);
+    
+    setCategorie(response.data?.data || []);
+  } catch (error) {
+    console.error("❌ CATEGORIES ERROR:", error);
+    console.error("❌ STATUS:", error.response?.status);
+    console.error("❌ ERROR DATA:", error.response?.data);
+  }
+};
 
   useEffect(() => {
     getAllCatgr();

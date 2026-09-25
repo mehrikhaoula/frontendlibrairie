@@ -44,11 +44,11 @@ function EditOrder({ order, onSave, onCancel }) {
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-lg"
           >
-            <option value="pending">En attente</option>
-            <option value="confirmed">Confirmée</option>
-            <option value="shipped">Expédiée</option>
-            <option value="delivered">Livrée</option>
-            <option value="cancelled">Annulée</option>
+            <option value="En attente">En attente</option>
+<option value="Confirmée">Confirmée</option>
+<option value="Expédiée">Expédiée</option>
+<option value="Livrée">Livrée</option>
+<option value="Annulée">Annulée</option>
           </select>
         </div>
 

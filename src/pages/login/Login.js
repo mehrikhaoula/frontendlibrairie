@@ -30,18 +30,20 @@ function Login() {
   e.preventDefault();
   try {
     const response = await axios.post(endpoint.login, data, {
+      
       withCredentials: true,
       headers: {
         "Content-Type": "application/json",
       },
     });
+    console.log("LOGIN ADMIN RESPONSE:", response.data);
 
     if (response.status === 200) {
       const adminData = response.data.data.admin;
       dispatch(
         loginAdmin({
           id: adminData.id,
-          name: adminData.name,
+          name: adminData.nom,
           email: adminData.email,
           role: adminData.role,
         })
@@ -120,15 +122,16 @@ function Login() {
         </form>
         <p className="font-semibold mt-5">
           Don't have an account?
-          <a href="#" className="text-blue-900 hover:underline">
-            {" "}
-            Register{" "}
-          </a>
+          <span className="text-blue-900 hover:underline cursor-pointer">
+  Register
+</span>
         </p>
         {/* Lien optionnel (exemple) */}
         <p className="text-center text-gray-500 mt-6 text-sm">
           Mot de passe oublié ?{" "}
-          <p className="text-blue-500 hover:underline">Réinitialiser</p>
+           <span className="text-blue-500 hover:underline cursor-pointer">
+    Réinitialiser
+  </span>
         </p>
       </div>
     </div>

@@ -46,7 +46,7 @@ function Header() {
         {/* Navigation principale */}
         <nav className="hidden md:flex items-center gap-8">
           <NavLink
-            to="/admin/dashboard"
+            to="/admin/users"
             className={({ isActive }) =>
               `flex items-center gap-2 px-3 py-1 rounded-md ${
                 isActive ? 'bg-blue-700 text-white' : 'text-gray-200'
@@ -57,7 +57,7 @@ function Header() {
             Dashboard
           </NavLink>
           <NavLink
-            to="/admin/catégorie"
+            to="/admin/categories"
             className={({ isActive }) =>
               `flex items-center gap-2 px-3 py-1 rounded-md ${
                 isActive ? 'bg-blue-700 text-white' : 'text-gray-200'
@@ -67,14 +67,14 @@ function Header() {
             Catégorie
           </NavLink>
           <NavLink
-            to="/admin/pannier"
+            to="/admin/orders"
             className={({ isActive }) =>
               `flex items-center gap-2 px-3 py-1 rounded-md ${
                 isActive ? 'bg-blue-700 text-white' : 'text-gray-200'
               } hover:bg-blue-700 hover:text-white transition-all duration-200`
             }
           >
-            Pannier
+            Orders
           </NavLink>
         </nav>
 

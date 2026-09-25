@@ -38,7 +38,7 @@ const ProduitTable = ({ produits, onEdit, onDelete }) => {
             <td className="px-6 py-4 text-sm text-gray-700">{prod.name}</td>
             <td className="px-6 py-4 text-sm text-gray-700">{prod.brand}</td>
             <td className="px-6 py-4 text-sm text-gray-700">{prod.category}</td>
-            <td className="px-6 py-4 text-sm text-gray-700">{prod.price} €</td>
+            <td className="px-6 py-4 text-sm text-gray-700">{prod.price} Dt</td>
             <td className="px-6 py-4 text-sm text-gray-700">{prod.discount} %</td>
             <td className="px-6 py-4 text-sm">
               <button
